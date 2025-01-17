@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { JsonView } from "@/components/ui/json-view";
+import { Loader2 } from "lucide-react";
+import { LoadingSkeleton } from "@/components/loading-skeleton";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -62,17 +64,25 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900 flex flex-col items-center justify-center p-4">
-      <main className="w-full max-w-2xl mx-auto text-center space-y-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 text-transparent bg-clip-text">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-900 to-black flex flex-col items-center p-4 relative overflow-x-hidden">
+      {/* Ambient glow effects */}
+      <div className="fixed top-0 left-1/4 w-3/4 h-1/2 bg-violet-500/10 blur-[120px] rounded-full" />
+      <div className="fixed bottom-0 right-1/4 w-3/4 h-1/2 bg-blue-500/10 blur-[120px] rounded-full" />
+
+      <main className="w-full max-w-2xl mx-auto text-center space-y-12 relative py-16 mt-[15vh]">
+        <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400 bg-gradient-moving animate-gradient text-transparent bg-clip-text pb-2">
           Analyze Any Website
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative w-full">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative w-full group">
             <Input
               type="url"
               placeholder="https://example.com"
-              className="w-full h-14 px-6 rounded-full bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-400 focus:ring-2 focus:ring-violet-400 focus:border-transparent transition-all"
+              className="w-full h-14 px-6 rounded-full bg-zinc-800/50 border-zinc-700/50 text-zinc-100 placeholder:text-zinc-500 
+                focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 
+                shadow-lg shadow-black/20 backdrop-blur-sm
+                transition-all duration-300
+                group-hover:bg-zinc-800/70 group-hover:border-violet-500/30"
               value={url}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setUrl(e.target.value)
@@ -81,10 +91,15 @@ export default function Home() {
               disabled={isLoading}
             />
           </div>
-          <div className="relative w-full">
+          <div className="relative w-full group">
             <Textarea
               placeholder="What would you like to know about this website? (Optional)"
-              className="w-full min-h-[100px] px-6 py-4 rounded-xl bg-zinc-800/50 border-zinc-700 text-zinc-100 placeholder:text-zinc-400 focus:ring-2 focus:ring-violet-400 focus:border-transparent transition-all resize-none"
+              className="w-full min-h-[100px] px-6 py-4 rounded-2xl bg-zinc-800/50 border-zinc-700/50 text-zinc-100 placeholder:text-zinc-500 
+                focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50
+                shadow-lg shadow-black/20 backdrop-blur-sm
+                transition-all duration-300
+                group-hover:bg-zinc-800/70 group-hover:border-violet-500/30
+                resize-none"
               value={prompt}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                 setPrompt(e.target.value)
@@ -94,35 +109,67 @@ export default function Home() {
           </div>
           <Button
             type="submit"
-            className="w-full h-10 rounded-full bg-violet-600 hover:bg-violet-700 text-white font-medium transition-colors"
+            className="w-full h-12 rounded-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 
+              text-white font-medium shadow-lg shadow-violet-500/25 
+              transition-all duration-300 hover:shadow-violet-500/40 hover:scale-[1.02]
+              disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
             disabled={isLoading}
           >
-            {isLoading ? "Analyzing..." : "Analyze Website"}
+            {isLoading ? (
+              <>
+                <Loader2 className="animate-spin" />
+                Analyzing...
+              </>
+            ) : (
+              "Analyze Website"
+            )}
           </Button>
         </form>
 
         {error && (
-          <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400">
+          <div
+            className="p-6 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400
+            shadow-lg shadow-red-500/5 backdrop-blur-sm
+            animate-in fade-in slide-in-from-top-4 duration-500"
+          >
             {error}
           </div>
         )}
 
-        {result && (
-          <div className="space-y-6 text-left">
-            <div className="p-6 rounded-lg bg-zinc-800/50 border border-zinc-700 space-y-4">
+        {isLoading && <LoadingSkeleton />}
+
+        {!isLoading && result && (
+          <div className="space-y-6 text-left animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div
+              className="p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50 space-y-4
+              shadow-lg shadow-black/20 backdrop-blur-sm
+              hover:bg-zinc-800/70 hover:border-violet-500/30 transition-colors duration-300"
+            >
               <h2 className="text-xl font-semibold text-zinc-100">Analysis</h2>
               <JsonView data={result.analysis} />
             </div>
 
-            <div className="p-6 rounded-lg bg-zinc-800/50 border border-zinc-700 space-y-4">
+            <div
+              className="p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700/50 space-y-4
+              shadow-lg shadow-black/20 backdrop-blur-sm
+              hover:bg-zinc-800/70 hover:border-violet-500/30 transition-colors duration-300"
+            >
               <h2 className="text-xl font-semibold text-zinc-100">
                 Page Metadata
               </h2>
-              <dl className="space-y-2">
-                <dt className="text-zinc-400">Title</dt>
-                <dd className="text-zinc-100">{result.metadata.title}</dd>
-                <dt className="text-zinc-400">Description</dt>
-                <dd className="text-zinc-100">{result.metadata.description}</dd>
+              <dl className="space-y-3">
+                <div className="space-y-1">
+                  <dt className="text-sm text-zinc-400 font-medium">Title</dt>
+                  <dd className="text-zinc-100">{result.metadata.title}</dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="text-sm text-zinc-400 font-medium">
+                    Description
+                  </dt>
+                  <dd className="text-zinc-100">
+                    {result.metadata.description}
+                  </dd>
+                </div>
               </dl>
             </div>
           </div>
