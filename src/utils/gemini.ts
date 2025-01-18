@@ -14,7 +14,11 @@ interface Message {
   content: string;
 }
 
-const GEMINI_MODELS = ["gemini-1.5-flash", "gemini-1.5-flash-8b"];
+const GEMINI_MODELS = [
+  "gemini-2.0-flash-exp",
+  "gemini-1.5-flash",
+  "gemini-1.5-flash-8b",
+];
 
 const MAX_RETRIES = 3;
 const INITIAL_RETRY_DELAY = 1000; // 1 second
