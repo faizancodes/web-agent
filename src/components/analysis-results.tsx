@@ -1,11 +1,18 @@
 import { JsonView } from "@/components/ui/json-view";
 import { AnalysisResult } from "@/types/analyze";
+import { Button } from "@/components/ui/button";
+import { jsonToCSV, downloadCSV } from "@/utils/csv";
 
 interface AnalysisResultsProps {
   result: AnalysisResult;
 }
 
 export function AnalysisResults({ result }: AnalysisResultsProps) {
+  const handleDownload = () => {
+    const csvContent = jsonToCSV(result.analysis);
+    downloadCSV(csvContent, "analysis-results.csv");
+  };
+
   return (
     <div className="space-y-6 text-left animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div
@@ -13,7 +20,17 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
         shadow-lg shadow-black/20 backdrop-blur-sm
         hover:bg-zinc-800/70 hover:border-violet-500/30 transition-colors duration-300"
       >
-        <h2 className="text-xl font-semibold text-zinc-100">Analysis</h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-zinc-100">Analysis</h2>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDownload}
+            className="text-zinc-300 hover:text-zinc-100"
+          >
+            Download CSV
+          </Button>
+        </div>
         <JsonView data={result.analysis} />
       </div>
 
