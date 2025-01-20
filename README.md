@@ -20,7 +20,7 @@ Follow along with any code shared in the [Google Doc here](https://docs.google.c
 
 1. First, clone the repository and cd into the directory
 ```
-git clone https://github.com/team-headstart/web-agent
+git clone https://github.com/faizancodes/web-agent
 cd web-agent
 ```
 
